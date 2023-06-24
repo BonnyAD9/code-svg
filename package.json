@@ -14,8 +14,8 @@
     "contributes": {
         "commands": [
             {
-                "command": "code-svg.helloWorld",
-                "title": "Hello World"
+                "command": "code-svg.preview",
+                "title": "Svg Preview"
             }
         ]
     },

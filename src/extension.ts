@@ -5,18 +5,14 @@ import * as vscode from 'vscode';
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "code-svg" is now active!');
-
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with registerCommand
-    // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand('code-svg.helloWorld', () => {
-        // The code you place here will be executed every time your command is executed
-        // Display a message box to the user
-        vscode.window.showInformationMessage('Hello World from code-svg!');
+    let disposable = vscode.commands.registerCommand('code-svg.preview', () => {
+        const panel = vscode.window.createWebviewPanel(
+            'code-svg.preview',
+            `Preview ${vscode.window.activeTextEditor?.document.fileName.split('/').at(-1)}`,
+            vscode.ViewColumn.Beside,
+            {}
+        );
+        panel.webview.html = svgPreviewHTML();
     });
 
     context.subscriptions.push(disposable);
@@ -24,3 +20,22 @@ export function activate(context: vscode.ExtensionContext) {
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
+
+function svgPreviewHTML() {
+    let text = vscode.window.activeTextEditor?.document.getText();
+    return text == null ? HTML("No file opened") : HTML(text);
+}
+
+function HTML(content: String) {
+    return `<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Cat Coding</title>
+        </head>
+        <body>
+            ${content}
+        </body>
+    </html>`;
+}
