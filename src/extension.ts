@@ -5,15 +5,26 @@ import * as vscode from 'vscode';
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-    let disposable = vscode.commands.registerCommand('code-svg.preview', () => {
-        const panel = vscode.window.createWebviewPanel(
-            'code-svg.preview',
-            `Preview ${vscode.window.activeTextEditor?.document.fileName.split('/').at(-1)}`,
-            vscode.ViewColumn.Beside,
-            {}
-        );
-        panel.webview.html = svgPreviewHTML();
-    });
+    let disposable = vscode.commands.registerCommand(
+        'code-svg.preview',
+        () => {
+            const panel = vscode.window.createWebviewPanel(
+                'code-svg.preview',
+                `Preview ${
+                    vscode
+                        .window
+                        .activeTextEditor
+                        ?.document
+                        .fileName
+                        .split('/')
+                        .at(-1)
+                }`,
+                vscode.ViewColumn.Beside,
+                {}
+            );
+            panel.webview.html = svgPreviewHTML();
+        }
+    );
 
     context.subscriptions.push(disposable);
 }
@@ -31,8 +42,11 @@ function HTML(content: String) {
     <html lang="en">
         <head>
             <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Cat Coding</title>
+            <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1.0"
+            >
+            <title>code-svg html</title>
         </head>
         <body>
             ${content}
