@@ -156,7 +156,6 @@ function svgPreviewHTML(file: vscode.TextDocument) {
         window.addEventListener("wheel", (e) => {
             e.preventDefault();
 
-            console.log("zooom");
             console.log("m:", mx, my);
 
             // old relative position of mouse relative to the svg
