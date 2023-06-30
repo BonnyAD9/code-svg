@@ -37,3 +37,12 @@ VSCode extension with advanced features that help making and editing raw svg fil
     - show the user coordinates, right-click to make the coodinates stay after moving mouse
     - reset to default zoom and position
     - preview button
+
+## How to get it
+It is available on the [VSCode marketplace](https://marketplace.visualstudio.com/items?itemName=BonnyAD9.code-svg)
+
+## Links
+- **Author:** [BonnyAD9](https://github.com/BonnyAD9)
+- **Marketplace:** [code-svg](https://marketplace.visualstudio.com/items?itemName=BonnyAD9.code-svg)
+- **GitHub Repository:** [code-svg](https://github.com/BonnyAD9/code-svg)
+- **My website:** [bonnyad9.github.io](https://bonnyad9.github.io/)
