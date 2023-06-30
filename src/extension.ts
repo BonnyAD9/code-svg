@@ -84,20 +84,30 @@ function svgPreviewHTML(file: vscode.TextDocument) {
     // TODO: verify svg ? starts with / regex / extension ?
     let svg = file.getText();
     return HTML(`
-    <div style="overflow: visible; display: block;" class="scrl">
-        <div class="svg-view" style="display: block; position: relative; height: 100%; width: 100%; top: 0px; left: 0px;">
-            ${svg}
+    <div class="menu" style="height: 2em; display: flex; align-items: center;  border-bottom: solid 1px gray;">
+        <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-color: transparent;" onclick="setBg('none')"></div>
+        <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-color: black;" onclick="setBg('linear-gradient(black, black)')"></div>
+        <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-color: white;" onclick="setBg('linear-gradient(white, white)')"></div>
+        <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-repeat: repeat; background-size: 20px 20px; background-image: conic-gradient(#222 0 90deg, #444 0 180deg, #222 0 270deg, #444 0)" onclick="setBg('conic-gradient(#222 0 90deg, #444 0 180deg, #222 0 270deg, #444 0)')"></div>
+        <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-repeat: repeat; background-size: 20px 20px; background-image: conic-gradient(#CCC 0 90deg, #EEE 0 180deg, #CCC 0 270deg, #EEE 0)" onclick="setBg('conic-gradient(#CCC 0 90deg, #EEE 0 180deg, #CCC 0 270deg, #EEE 0)')"></div>
+        <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px);"><input type="checkbox" onclick="toggleBg()"></div>
+    </div>
+    <div style="overflow: hidden; display: block; height: calc(100% - 2em - 1px); background-repeat: repeat; background-size: 20px 20px; background-image: none;" class="scrl">
+        <div class="svg-view" style="display: block; position: relative; width: 100%; top: 0px; left: 0px; background-repeat: repeat; background-size: 20px 20px; background-image: none;">
+        ${svg}
         </div>
     </div>
     <script>
         const scrlRatio = 0.003;
         let svg = document.querySelector(".svg-view");
         let scrl = document.querySelector(".scrl");
+        let bge = [svg, scrl];
+        let bgi = 1;
 
         let mx = 0;
         let my = 0;
 
-        window.addEventListener("wheel", (e) => {
+        scrl.addEventListener("wheel", (e) => {
             e.preventDefault();
 
             console.log("m:", mx, my);
@@ -108,7 +118,6 @@ function svgPreviewHTML(file: vscode.TextDocument) {
             let oy = (my - rect.y) / rect.height;
 
             // zoom
-            svg.style.height = addp(svg.style.height, -scrlRatio * e.deltaY * getp(svg.style.height, "%"), "%");
             svg.style.width = addp(svg.style.width, -scrlRatio * e.deltaY * getp(svg.style.width, "%"), "%");
 
             rect = svg.getBoundingClientRect();
@@ -124,7 +133,7 @@ function svgPreviewHTML(file: vscode.TextDocument) {
             svg.style.top = addp(svg.style.top, rect.height * dy, "px");
         }, { passive: false });
 
-        svg.addEventListener("mousemove", (e) => {
+        scrl.addEventListener("mousemove", (e) => {
             if (e.buttons != 1) {
                 return;
             }
@@ -145,6 +154,17 @@ function svgPreviewHTML(file: vscode.TextDocument) {
             mx = e.pageX;
             my = e.pageY;
         });
+
+        function setBg(bg) {
+            bge[bgi].style.backgroundImage = bg;
+        }
+
+        function toggleBg() {
+            let cur = bge[bgi].style.backgroundImage;
+            setBg('none');
+            bgi = (bgi + 1) % 2;
+            setBg(cur);
+        }
 
         function getp(s, u) {
             return parseFloat(s.substring(0, s.length - u.length));
@@ -170,7 +190,7 @@ function HTML(content: string, head?: string) {
             <title>code-svg html</title>
             ${head ?? ''}
         </head>
-        <body style="display:block; width: 100vw; height=100vh; padding: 0; margin: 0; overflow: hidden">
+        <body style="display:block; width: 100vw; height: 100vh; padding: 0; margin: 0; overflow: hidden">
             ${content}
         </body>
     </html>`;
