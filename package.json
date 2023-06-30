@@ -1,5 +1,6 @@
 {
     "repository": "https://github.com/BonnyAD9/code-svg/tree/main",
+    "publisher": "BonnyAD9",
     "name": "code-svg",
     "displayName": "code-svg",
     "description": "Advanced svg manipulation in code and preview.",
