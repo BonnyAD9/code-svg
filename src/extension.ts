@@ -84,25 +84,32 @@ function svgPreviewHTML(file: vscode.TextDocument) {
     // TODO: verify svg ? starts with / regex / extension ?
     let svg = file.getText();
     return HTML(`
-    <div class="menu" style="height: 2em; display: flex; align-items: center;  border-bottom: solid 1px gray;">
-        <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-color: transparent;" onclick="setBg('none')"></div>
+    <div class="menu" style="height: 2em; display: flex; align-items: center; border-bottom: solid 1px gray; background-color: #222; color: white">
+        <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; text-align: center; background-color: transparent;" onclick="setBg('none')">T</div>
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-color: black;" onclick="setBg('linear-gradient(black, black)')"></div>
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-color: white;" onclick="setBg('linear-gradient(white, white)')"></div>
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-repeat: repeat; background-size: 20px 20px; background-image: conic-gradient(#222 0 90deg, #444 0 180deg, #222 0 270deg, #444 0)" onclick="setBg('conic-gradient(#222 0 90deg, #444 0 180deg, #222 0 270deg, #444 0)')"></div>
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-repeat: repeat; background-size: 20px 20px; background-image: conic-gradient(#CCC 0 90deg, #EEE 0 180deg, #CCC 0 270deg, #EEE 0)" onclick="setBg('conic-gradient(#CCC 0 90deg, #EEE 0 180deg, #CCC 0 270deg, #EEE 0)')"></div>
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px);"><input type="checkbox" onclick="toggleBg()"></div>
+        <div class="cur-coords" style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;"></div>
+        <div style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;">|</div>
+        <div class="sav-coords" style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;"></div>
     </div>
-    <div style="overflow: hidden; display: block; height: calc(100% - 2em - 1px); background-repeat: repeat; background-size: 20px 20px; background-image: none;" class="scrl">
+    <div oncontextmenu="return false;" style="overflow: hidden; display: block; height: calc(100% - 2em - 1px); background-repeat: repeat; background-size: 20px 20px; background-image: none;" class="scrl">
         <div class="svg-view" style="display: block; position: relative; width: 100%; top: 0px; left: 0px; background-repeat: repeat; background-size: 20px 20px; background-image: none;">
-        ${svg}
+            ${svg}
         </div>
     </div>
     <script>
         const scrlRatio = 0.003;
         let svg = document.querySelector(".svg-view");
         let scrl = document.querySelector(".scrl");
+        let coords = document.querySelector(".cur-coords");
+        let ccoords = document.querySelector(".sav-coords");
         let bge = [svg, scrl];
         let bgi = 1;
+
+        let svgItself = svg.firstElementChild;
 
         let mx = 0;
         let my = 0;
@@ -134,18 +141,31 @@ function svgPreviewHTML(file: vscode.TextDocument) {
         }, { passive: false });
 
         scrl.addEventListener("mousemove", (e) => {
+            coords.innerHTML = coordsText();
+
             if (e.buttons != 1) {
                 return;
             }
 
             svg.style.left = addp(svg.style.left, e.movementX, "px");
             svg.style.top = addp(svg.style.top, e.movementY, "px");
-        });
+        }, { passive: true });
+
+        scrl.addEventListener("mousedown", (e) => {
+            if (e.buttons == 2) {
+                ccoords.innerHTML = coordsText();
+            }
+        }, { passive: true });
+
+        scrl.addEventListener("mouseleave", (e) => {
+            coords.innerHTML = "";
+        }, { passive: true });
 
         window.addEventListener("message", (e) => {
             switch (e.data.action) {
                 case "update":
                     svg.innerHTML = e.data.content;
+                    svgItself = svg.firstElementChild;
                     break;
             }
         });
@@ -154,6 +174,17 @@ function svgPreviewHTML(file: vscode.TextDocument) {
             mx = e.pageX;
             my = e.pageY;
         });
+
+        function coordsText() {
+            let vb = svgItself.viewBox.baseVal;
+            // baseVal animVal
+            let rect = svg.getBoundingClientRect();
+
+            let x = (mx - rect.left) * vb.width / rect.width - vb.x;
+            let y = (my - rect.top) * vb.height / rect.height - vb.y;
+
+            return \`\${x.toFixed(3)}, \${y.toFixed(3)}\`;
+        }
 
         function setBg(bg) {
             bge[bgi].style.backgroundImage = bg;
