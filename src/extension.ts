@@ -176,6 +176,10 @@ function svgPreviewHTML(file: vscode.TextDocument) {
         });
 
         function coordsText() {
+            if (!svgItself || svgItself.nodeName.toLowerCase() != "svg") {
+                return "?, ?";
+            }
+
             let vb = svgItself.viewBox.baseVal;
             // baseVal animVal
             let rect = svg.getBoundingClientRect();
