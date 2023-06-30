@@ -27,4 +27,13 @@ VSCode extension with advanced features that help making and editing raw svg fil
 - none
 
 ## Release Notes
-- none
+
+### v0.0.1
+- The first release!!!
++ advanced preview
+    - auto update on save (it retains its state (zoom, position, ...))
+    - change background (transparent, white, black, bright checkerboard, dark checkerboard), choose background everywhere or only behind the svg
+    - zoom in/out, move around
+    - show the user coordinates, right-click to make the coodinates stay after moving mouse
+    - reset to default zoom and position
+    - preview button
