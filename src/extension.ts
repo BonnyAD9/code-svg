@@ -24,6 +24,7 @@ class DisposableArray<T extends vscode.Disposable> implements vscode.Disposable 
 }
 
 let views: DisposableArray<SvgView> = new DisposableArray();
+let config = vscode.workspace.getConfiguration("svg");
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -48,6 +49,7 @@ function svgPreviewCommand(context: vscode.ExtensionContext) {
     }
 
     let fileName = file.fileName;
+    console.log(config.get("preview.retainState"));
 
     let view = new SvgView(vscode.window.createWebviewPanel(
         'code-svg.preview',
@@ -56,7 +58,8 @@ function svgPreviewCommand(context: vscode.ExtensionContext) {
         }`,
         vscode.ViewColumn.Beside,
         {
-            enableScripts: true
+            enableScripts: true,
+            retainContextWhenHidden: config.get("preview.retainState"),
         }
     ));
 

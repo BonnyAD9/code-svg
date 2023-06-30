@@ -17,7 +17,17 @@
                 "command": "code-svg.preview",
                 "title": "Svg Preview"
             }
-        ]
+        ],
+        "configuration": {
+            "title": "Svg",
+            "properties": {
+                "svg.preview.retainState": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Determines whether the state of the preview is retained when in the background. Set to true to lower resource usage"
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run package",
