@@ -2,6 +2,29 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
+class SvgView implements vscode.Disposable {
+    panel: vscode.WebviewPanel;
+    diss: DisposableArray<vscode.Disposable> = new DisposableArray();
+
+    constructor(p: vscode.WebviewPanel) {
+        this.panel = p;
+    }
+
+    dispose() {
+        this.diss.dispose();
+    }
+}
+
+class DisposableArray<T extends vscode.Disposable> implements vscode.Disposable {
+    arr: Array<T> = [];
+
+    dispose() {
+        this.arr.forEach(d => d.dispose());
+    }
+}
+
+let views: DisposableArray<SvgView> = new DisposableArray();
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -11,28 +34,11 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(disposable);
+    context.subscriptions.push(views);
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
-
-class SvgView {
-    panel: vscode.WebviewPanel;
-    diss: Array<vscode.Disposable>;
-
-    constructor(p: vscode.WebviewPanel) {
-        this.panel = p;
-        this.diss = [];
-    }
-
-    detach() {
-        this.diss.forEach(d => {
-            d.dispose();
-        });
-    }
-}
-
-let views: Array<SvgView> = [];
 
 function svgPreviewCommand(context: vscode.ExtensionContext) {
     let file = vscode.window.activeTextEditor?.document;
@@ -54,23 +60,23 @@ function svgPreviewCommand(context: vscode.ExtensionContext) {
         }
     ));
 
-    view.diss.push(vscode.workspace.onDidSaveTextDocument((e) => {
+    view.diss.arr.push(vscode.workspace.onDidSaveTextDocument((e) => {
         if (e.fileName == fileName) {
-            svgFileChange(context, e, view);
+            svgFileChange(e, view);
         }
     }));
 
-    views.push(view);
+    views.arr.push(view);
 
     view.panel.webview.html = svgPreviewHTML(file);
     view.panel.onDidDispose(() => {
-        view.detach();
-        let i = views.indexOf(view);
-        views.splice(i, 1);
+        view.dispose();
+        let i = views.arr.indexOf(view);
+        views.arr.splice(i, 1);
     });
 }
 
-function svgFileChange(context: vscode.ExtensionContext, file: vscode.TextDocument, view: SvgView) {
+function svgFileChange(file: vscode.TextDocument, view: SvgView) {
     view.panel.webview.postMessage({ action: "update", content: file.getText() });
 }
 
