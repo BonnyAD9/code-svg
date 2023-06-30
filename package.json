@@ -15,7 +15,8 @@
         "commands": [
             {
                 "command": "code-svg.preview",
-                "title": "Svg Preview"
+                "title": "Svg Preview",
+                "icon": "$(open-preview)"
             }
         ],
         "configuration": {
@@ -27,6 +28,15 @@
                     "description": "Determines whether the state of the preview is retained when in the background. Set to true to lower resource usage"
                 }
             }
+        },
+        "menus": {
+            "editor/title": [
+                {
+                    "when": "resourceExtname == .svg",
+                    "command": "code-svg.preview",
+                    "group": "navigation"
+                }
+            ]
         }
     },
     "scripts": {
