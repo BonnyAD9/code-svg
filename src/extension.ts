@@ -85,15 +85,15 @@ function svgPreviewHTML(file: vscode.TextDocument) {
     let svg = file.getText();
     return HTML(`
     <div class="menu" style="height: 2em; display: flex; align-items: center; border-bottom: solid 1px gray; background-color: #222; color: white">
-        <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; text-align: center; background-color: transparent;" onclick="setBg('none')">T</div>
+        <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; user-select: none; text-align: center; background-color: transparent;" onclick="setBg('none')">T</div>
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-color: black;" onclick="setBg('linear-gradient(black, black)')"></div>
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-color: white;" onclick="setBg('linear-gradient(white, white)')"></div>
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-repeat: repeat; background-size: 20px 20px; background-image: conic-gradient(#222 0 90deg, #444 0 180deg, #222 0 270deg, #444 0)" onclick="setBg('conic-gradient(#222 0 90deg, #444 0 180deg, #222 0 270deg, #444 0)')"></div>
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-repeat: repeat; background-size: 20px 20px; background-image: conic-gradient(#CCC 0 90deg, #EEE 0 180deg, #CCC 0 270deg, #EEE 0)" onclick="setBg('conic-gradient(#CCC 0 90deg, #EEE 0 180deg, #CCC 0 270deg, #EEE 0)')"></div>
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px);"><input type="checkbox" onclick="toggleBg()"></div>
-        <div class="cur-coords" style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;"></div>
+        <div class="cur-coords" style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;"> -, - </div>
         <div style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;">|</div>
-        <div class="sav-coords" style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;"></div>
+        <div class="sav-coords" style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;"> -, - </div>
     </div>
     <div oncontextmenu="return false;" style="overflow: hidden; display: block; height: calc(100% - 2em - 1px); background-repeat: repeat; background-size: 20px 20px; background-image: none;" class="scrl">
         <div class="svg-view" style="display: block; position: relative; width: 100%; top: 0px; left: 0px; background-repeat: repeat; background-size: 20px 20px; background-image: none;">
@@ -116,8 +116,6 @@ function svgPreviewHTML(file: vscode.TextDocument) {
 
         scrl.addEventListener("wheel", (e) => {
             e.preventDefault();
-
-            console.log("m:", mx, my);
 
             // old relative position of mouse relative to the svg
             let rect = svg.getBoundingClientRect();
@@ -158,7 +156,7 @@ function svgPreviewHTML(file: vscode.TextDocument) {
         }, { passive: true });
 
         scrl.addEventListener("mouseleave", (e) => {
-            coords.innerHTML = "";
+            coords.innerHTML = "-, -";
         }, { passive: true });
 
         window.addEventListener("message", (e) => {
@@ -184,8 +182,8 @@ function svgPreviewHTML(file: vscode.TextDocument) {
             // baseVal animVal
             let rect = svg.getBoundingClientRect();
 
-            let x = (mx - rect.left) * vb.width / rect.width - vb.x;
-            let y = (my - rect.top) * vb.height / rect.height - vb.y;
+            let x = (mx - rect.left) * vb.width / rect.width + vb.x;
+            let y = (my - rect.top) * vb.height / rect.height + vb.y;
 
             return \`\${x.toFixed(3)}, \${y.toFixed(3)}\`;
         }
