@@ -99,7 +99,7 @@ function svgPreviewHTML(file: vscode.TextDocument) {
         <div style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;">|</div>
         <div class="sav-coords" style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;"> -, - </div>
     </div>
-    <div oncontextmenu="return false;" style="overflow: hidden; display: block; height: calc(100% - 2em - 1px); background-repeat: repeat; background-size: 20px 20px; background-image: none;" class="scrl">
+    <div oncontextmenu="return false;" style="overflow: auto; display: block; height: calc(100% - 2em - 1px); background-repeat: repeat; background-size: 20px 20px; background-image: none;" class="scrl">
         <div class="svg-view" style="display: block; position: relative; width: 100%; top: 0px; left: 0px; background-repeat: repeat; background-size: 20px 20px; background-image: none;">
             ${svg}
         </div>

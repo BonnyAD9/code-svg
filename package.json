@@ -25,7 +25,7 @@
                 "svg.preview.retainState": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Determines whether the state of the preview is retained when in the background. Set to true to lower resource usage"
+                    "description": "Determines whether the state of the preview is retained when in the background. Set to false to lower resource usage"
                 }
             }
         },
