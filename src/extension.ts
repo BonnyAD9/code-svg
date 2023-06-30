@@ -91,6 +91,7 @@ function svgPreviewHTML(file: vscode.TextDocument) {
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-repeat: repeat; background-size: 20px 20px; background-image: conic-gradient(#222 0 90deg, #444 0 180deg, #222 0 270deg, #444 0)" onclick="setBg('conic-gradient(#222 0 90deg, #444 0 180deg, #222 0 270deg, #444 0)')"></div>
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; background-repeat: repeat; background-size: 20px 20px; background-image: conic-gradient(#CCC 0 90deg, #EEE 0 180deg, #CCC 0 270deg, #EEE 0)" onclick="setBg('conic-gradient(#CCC 0 90deg, #EEE 0 180deg, #CCC 0 270deg, #EEE 0)')"></div>
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px);"><input type="checkbox" onclick="toggleBg()"></div>
+        <div onclick="defaultSize()" style="width: 1.5em; margin-left: 0.25em; height: 1.5em; user-select: none;">&#128472;</div>
         <div class="cur-coords" style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;"> -, - </div>
         <div style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;">|</div>
         <div class="sav-coords" style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;"> -, - </div>
@@ -197,6 +198,12 @@ function svgPreviewHTML(file: vscode.TextDocument) {
             setBg('none');
             bgi = (bgi + 1) % 2;
             setBg(cur);
+        }
+
+        function defaultSize() {
+            svg.style.width = "100%";
+            svg.style.left = "0px";
+            svg.style.top = "0px";
         }
 
         function getp(s, u) {
