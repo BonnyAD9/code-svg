@@ -98,7 +98,7 @@ function svgPreviewHTML(file: vscode.TextDocument) {
         <div style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;">|</div>
         <div class="sav-coords" style="margin-left: 0.25em; height: calc(1.5em - 2px); font-family: monospace;"> -, - </div>
     </div>
-    <div oncontextmenu="return false;" style="overflow: auto; display: block; height: calc(100% - 2em - 1px); background-repeat: repeat; background-size: 20px 20px; background-image: none;" class="scrl">
+    <div oncontextmenu="return false;" style="overflow: hidden; display: block; height: calc(100% - 2em - 1px); background-repeat: repeat; background-size: 20px 20px; background-image: none;" class="scrl">
         <div class="svg-view" style="display: block; position: relative; width: 100%; top: 0px; left: 0px; background-repeat: repeat; background-size: 20px 20px; background-image: none;">
             ${svg}
         </div>
@@ -116,6 +116,8 @@ function svgPreviewHTML(file: vscode.TextDocument) {
 
         let mx = 0;
         let my = 0;
+        let mox = 0;
+        let moy = 0;
 
         scrl.addEventListener("wheel", (e) => {
             e.preventDefault();
@@ -142,14 +144,14 @@ function svgPreviewHTML(file: vscode.TextDocument) {
         }, { passive: false });
 
         scrl.addEventListener("mousemove", (e) => {
-            coords.innerHTML = coordsText();
-
             if (e.buttons != 1) {
+                coords.innerHTML = coordsText();
                 return;
             }
 
-            svg.style.left = addp(svg.style.left, e.movementX, "px");
-            svg.style.top = addp(svg.style.top, e.movementY, "px");
+            svg.style.left = addp(svg.style.left, mox, "px");
+            svg.style.top = addp(svg.style.top, moy, "px");
+            coords.innerHTML = coordsText();
         }, { passive: true });
 
         scrl.addEventListener("mousedown", (e) => {
@@ -172,6 +174,9 @@ function svgPreviewHTML(file: vscode.TextDocument) {
         });
 
         window.addEventListener("mousemove", (e) => {
+            mox = e.pageX - mx;
+            moy = e.pageY - my;
+
             mx = e.pageX;
             my = e.pageY;
         });
