@@ -24,7 +24,7 @@ VSCode extension with advanced features that help making and editing raw svg fil
 - `svg.preview.retainState`, disable this to reset the preview state when it goes to background, (disable for less used resources)
 
 ## Known Issues
-- none
+- the image is mooving in wrong speed when vscode has other than default scale
 
 ## Release Notes
 

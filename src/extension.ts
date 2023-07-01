@@ -49,7 +49,6 @@ function svgPreviewCommand(context: vscode.ExtensionContext) {
     }
 
     let fileName = file.fileName;
-    console.log(config.get("preview.retainState"));
 
     let view = new SvgView(vscode.window.createWebviewPanel(
         'code-svg.preview',
