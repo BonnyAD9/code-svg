@@ -78,13 +78,17 @@ function svgPreviewCommand(context: vscode.ExtensionContext) {
     });
 }
 
+function removeWH(text: string): string {
+    return text.replace(/<svg\s(.|\s)*?>/, s => s.replace(/\swidth\s*=\s*"([^"]*(\\")?)*"|\sheight\s*=\s*"([^"]*(\\")?)*"/g, " "));
+}
+
 function svgFileChange(file: vscode.TextDocument, view: SvgView) {
-    view.panel.webview.postMessage({ action: "update", content: file.getText() });
+    view.panel.webview.postMessage({ action: "update", content: removeWH(file.getText()) });
 }
 
 function svgPreviewHTML(file: vscode.TextDocument) {
     // TODO: verify svg ? starts with / regex / extension ?
-    let svg = file.getText();
+    let svg = removeWH(file.getText());
     return HTML(`
     <div class="menu" style="height: 2em; display: flex; align-items: center; border-bottom: solid 1px gray; background-color: #222; color: white">
         <div style="width: calc(1.5em - 2px); margin-left: 0.25em; height: calc(1.5em - 2px); border: gray solid 1px; user-select: none; text-align: center; background-color: transparent;" onclick="setBg('none')">T</div>
